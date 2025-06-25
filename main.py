@@ -5,6 +5,7 @@ import requests
 from datetime import datetime, timedelta
 from threading import Thread
 from flask import Flask
+from zoneinfo import ZoneInfo  # Para fuso horário
 
 TOKEN = os.getenv('TOKEN')  # seu token no config var do Heroku
 CANAL_ID = -1002873312101   # coloque seu ID do canal aqui (com -100 na frente)
@@ -28,9 +29,12 @@ def enviar(texto):
     else:
         print("✅ Mensagem enviada com sucesso!")
 
+def agora_brasilia():
+    return datetime.now(ZoneInfo('America/Sao_Paulo'))
+
 def aguardar_ate(horario):
     while True:
-        agora = datetime.now()
+        agora = agora_brasilia()
         diff = (horario - agora).total_seconds()
         if diff <= 0:
             break
@@ -38,7 +42,7 @@ def aguardar_ate(horario):
 
 def ciclo():
     while True:
-        agora = datetime.now()
+        agora = agora_brasilia()
         espera = random.randint(1, 2)
         inicio_jogo = agora + timedelta(minutes=espera)
         fim_jogo = inicio_jogo + timedelta(minutes=2)
