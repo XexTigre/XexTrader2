@@ -48,22 +48,53 @@ def ciclo():
         fim_jogo = inicio_jogo + timedelta(minutes=2)
         aviso = inicio_jogo - timedelta(minutes=1)
 
-        print(f"⏳ Próximo sinal às {aviso.strftime('%H:%M')} → jogo de {inicio_jogo.strftime('%H:%M')} até {fim_jogo.strftime('%H:%M')}")
-
+        # Mensagem 1: Validando Entrada (1 min antes do jogo)
         aguardar_ate(aviso)
         enviar(
-            f'🚨 *SINAL DETECTADO!*\n\n'
-            f'🎰 *Jogue entre:* ⏱️ {inicio_jogo.strftime("%H:%M")} – {fim_jogo.strftime("%H:%M")}\n\n'
-            '🔥 *Preparado? Vai que é tua, TIGREIRO!*'
+            f'🔔 Validando Entrada 🔔\n\n'
+            f'CADASTRE-SE ANTES DE JOGAR ➡️\n\n'
+            f'[BETFURY](https://betfury.ac/?r=User9165603)\n'
+            f'CLIQUE AQUI PARA JOGAR\n\n'
+            f'💰Banca recomendada, acima de R$50,00\n'
+            f'\n'
+            f'Enviado às {aviso.strftime("%H:%M")}'
         )
 
-        aguardar_ate(fim_jogo)
-        aguardar_ate(fim_jogo + timedelta(minutes=3))
+        # Mensagem 2: Oportunidade Identificada (início do jogo)
         enviar(
-            '💬 *E aí tropa, quem pegou o sinal?*\n'
-            '🐾 Comenta aí se deu bom!'
+            f'✅ OPORTUNIDADE IDENTIFICADA\n\n'
+            f'🐯 Fortune Tiger 🐯\n'
+            f'⏰ Válido até: {fim_jogo.strftime("%H:%M")}\n\n'
+            f'👉 12x Normal\n'
+            f'⚡ 7x Turbo\n\n'
+            f'[BETFURY](https://betfury.ac/?r=User9165603)\n'
+            f'CLIQUE AQUI PARA JOGAR'
         )
 
+        # Aguarda o fim do jogo
+        aguardar_ate(fim_jogo)
+
+        # Mensagem 3: Sinal Finalizado (logo após o jogo)
+        enviar(
+            f'🍀 Sinal Finalizado 🍀\n'
+            f'🐯 Fortune Tiger 🐯\n'
+            f'🕑 Finalizado às: {fim_jogo.strftime("%H:%M")}'
+        )
+
+        # Aguarda entre 30 e 40 minutos antes da mensagem promocional
+        espera_promo = random.randint(30, 40)
+        proxima_promo = fim_jogo + timedelta(minutes=espera_promo)
+        aguardar_ate(proxima_promo)
+
+        # Mensagem 4: Promoção (sem sinal ativo)
+        enviar(
+            f'🚨ACABOU DE LANÇAR PLATAFORMA NOVA🚨\n\n'
+            f'[BETFURY](https://betfury.ac/?r=User9165603)\n\n'
+            f'CLIQUE AQUI PARA SE CADASTRAR\n\n'
+            f'🚨FAÇA UM DEPÓSITO DE NO MÍNIMO 10 E MANDA UM PRINT DA CONTA COM O DEPÓSITO NESSE CONTATO @XEXTRADER PARA GANHAR UMA BANCA NO DOBRO DO VALOR DEPOSITADO!'
+        )
+
+        # Espera entre 1 a 5 minutos antes do próximo ciclo
         time.sleep(random.randint(60, 300))
 
 if __name__ == '__main__':
