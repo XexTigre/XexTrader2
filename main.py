@@ -41,6 +41,8 @@ def aguardar_ate(horario):
         time.sleep(min(diff, 1))
 
 def ciclo():
+    contador_sinais = 0
+
     while True:
         agora = agora_brasilia()
         espera = random.randint(1, 2)
@@ -48,7 +50,7 @@ def ciclo():
         fim_jogo = inicio_jogo + timedelta(minutes=2)
         aviso = inicio_jogo - timedelta(minutes=1)
 
-        # Mensagem 1: Validando Entrada (1 min antes do jogo)
+        # Mensagem 1: Validando Entrada
         aguardar_ate(aviso)
         enviar(
             f'🔔 Validando Entrada 🔔\n\n'
@@ -56,10 +58,9 @@ def ciclo():
             f'[BETFURY](https://betfury.ac/?r=User9165603)\n'
             f'CLIQUE AQUI PARA JOGAR\n\n'
             f'💰Banca recomendada, acima de R$50,00\n'
-            f'\n'
         )
 
-        # Mensagem 2: Oportunidade Identificada (início do jogo)
+        # Mensagem 2: Oportunidade Identificada
         enviar(
             f'✅ OPORTUNIDADE IDENTIFICADA\n\n'
             f'🐯 Fortune Tiger 🐯\n'
@@ -70,31 +71,30 @@ def ciclo():
             f'CLIQUE AQUI PARA JOGAR'
         )
 
-        # Aguarda o fim do jogo
         aguardar_ate(fim_jogo)
 
-        # Mensagem 3: Sinal Finalizado (logo após o jogo)
+        # Mensagem 3: Sinal Finalizado
         enviar(
             f'🍀 Sinal Finalizado 🍀\n'
             f'🐯 Fortune Tiger 🐯\n'
             f'🕑 Finalizado às: {fim_jogo.strftime("%H:%M")}'
         )
 
-        # Aguarda entre 30 e 40 minutos antes da mensagem promocional
-        espera_promo = random.randint(30, 40)
-        proxima_promo = fim_jogo + timedelta(minutes=espera_promo)
-        aguardar_ate(proxima_promo)
+        contador_sinais += 1
 
-        # Mensagem 4: Promoção (sem sinal ativo)
-        enviar(
-            f'🚨ACABOU DE LANÇAR PLATAFORMA NOVA🚨\n\n'
-            f'[BETFURY](https://betfury.ac/?r=User9165603)\n\n'
-            f'CLIQUE AQUI PARA SE CADASTRAR\n\n'
-            f'🚨FAÇA UM DEPÓSITO DE NO MÍNIMO 10 E MANDA UM PRINT DA CONTA COM O DEPÓSITO NESSE CONTATO @XEXTRADER PARA GANHAR UMA BANCA NO DOBRO DO VALOR DEPOSITADO!'
-        )
+        # A cada 3 sinais, envia promoção
+        if contador_sinais >= 3:
+            enviar(
+                f'🚨ACABOU DE LANÇAR PLATAFORMA NOVA🚨\n\n'
+                f'[BETFURY](https://betfury.ac/?r=User9165603)\n\n'
+                f'CLIQUE AQUI PARA SE CADASTRAR\n\n'
+                f'🚨FAÇA UM DEPÓSITO DE NO MÍNIMO 10 E MANDA UM PRINT DA CONTA COM O DEPÓSITO NESSE CONTATO @XEXTRADER PARA GANHAR UMA BANCA NO DOBRO DO VALOR DEPOSITADO!'
+            )
+            contador_sinais = 0
+            time.sleep(60)  # Aguarda 1 minuto após a promoção
 
-        # Espera entre 1 a 5 minutos antes do próximo ciclo
-        time.sleep(random.randint(60, 300))
+        # Espera de 1 a 3 minutos antes do próximo ciclo
+        time.sleep(random.randint(60, 180))
 
 if __name__ == '__main__':
     Thread(target=ciclo, daemon=True).start()
