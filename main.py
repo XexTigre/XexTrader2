@@ -57,7 +57,6 @@ def ciclo():
             f'CLIQUE AQUI PARA JOGAR\n\n'
             f'💰Banca recomendada, acima de R$50,00\n'
             f'\n'
-            f'Enviado às {aviso.strftime("%H:%M")}'
         )
 
         # Mensagem 2: Oportunidade Identificada (início do jogo)
