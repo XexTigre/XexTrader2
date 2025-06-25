@@ -1,10 +1,19 @@
+import os
 import time
 import random
 import requests
 from datetime import datetime, timedelta
+from threading import Thread
+from flask import Flask
 
-TOKEN = '7841706687:AAH6PP7FYcSNt8fW3ElEkKKjQGTiDq3_BR0'
-CANAL_ID = -1002873312101  # ✅ ID numérico com prefixo correto
+TOKEN = os.getenv('TOKEN')  # seu token no config var do Heroku
+CANAL_ID = -1002873312101   # coloque seu ID do canal aqui (com -100 na frente)
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "✅ Bot está online!", 200
 
 def enviar(texto):
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
@@ -19,7 +28,7 @@ def enviar(texto):
     else:
         print("✅ Mensagem enviada com sucesso!")
 
-def aguardar_ate(horario: datetime):
+def aguardar_ate(horario):
     while True:
         agora = datetime.now()
         diff = (horario - agora).total_seconds()
@@ -35,26 +44,25 @@ def ciclo():
         fim_jogo = inicio_jogo + timedelta(minutes=2)
         aviso = inicio_jogo - timedelta(minutes=1)
 
-        print(f"⏳ Próximo sinal às {aviso.strftime('%H:%M:%S')} → jogo de {inicio_jogo.strftime('%H:%M:%S')} até {fim_jogo.strftime('%H:%M:%S')}")
+        print(f"⏳ Próximo sinal às {aviso.strftime('%H:%M')} → jogo de {inicio_jogo.strftime('%H:%M')} até {fim_jogo.strftime('%H:%M')}")
 
         aguardar_ate(aviso)
         enviar(
-            f'🚨 *ATENÇÃO TIGREIROS!* 🚨\n'
-            f'🎯 *SINAL DETECTADO!*\n\n'
-            f'💰 *HORÁRIO DO JOGO:* ⏱️ {inicio_jogo.strftime("%H:%M")}–{fim_jogo.strftime("%H:%M")}\n\n'
-            '🔥 *Preparem-se!*'
+            f'🚨 *SINAL DETECTADO!*\n\n'
+            f'🎰 *Jogue entre:* ⏱️ {inicio_jogo.strftime("%H:%M")} – {fim_jogo.strftime("%H:%M")}\n\n'
+            '🔥 *Preparado? Vai que é tua, TIGREIRO!*'
         )
 
         aguardar_ate(fim_jogo)
         aguardar_ate(fim_jogo + timedelta(minutes=3))
         enviar(
-            '🧐 *E aí, tropa?*\n'
-            '🎰 *Alguém acertou o TIGRINHO?*\n\n'
-            '💬 Comenta aí se pegou o sinal e se deu bom!\n'
-            '📲 *Vamos ver quem tá com a sorte no dedo!* 🍀'
+            '💬 *E aí tropa, quem pegou o sinal?*\n'
+            '🐾 Comenta aí se deu bom!'
         )
 
-        time.sleep(random.randint(1, 5) * 60)
+        time.sleep(random.randint(60, 300))
 
 if __name__ == '__main__':
-    ciclo()
+    Thread(target=ciclo, daemon=True).start()
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
