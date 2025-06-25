@@ -8,7 +8,7 @@ from flask import Flask
 from zoneinfo import ZoneInfo  # Para fuso horário
 
 TOKEN = os.getenv('TOKEN')  # seu token no config var do Heroku
-CANAL_ID = -1002873312101   # coloque seu ID do canal aqui (com -100 na frente)
+CANAL_ID = @slotsss777'   # coloque seu ID do canal aqui (com -100 na frente)
 
 app = Flask(__name__)
 
